@@ -2,3 +2,6 @@
 *.aux
 *.out
 *.gz
+
+.texpadtmp/*
+main.pdf
