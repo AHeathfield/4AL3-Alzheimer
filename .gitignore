@@ -10,3 +10,4 @@ main.pdf
 venv/
 
 output/
+output/*
