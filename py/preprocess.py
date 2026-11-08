@@ -1,16 +1,16 @@
 """
-Step 1: run ONCE (or whenever you change image size / HOG settings).
+Run ONCE (or whenever you change image size / HOG settings).
 Reads all images, extracts HOG features, and saves them to features.npz.
 
-Expected layout: DATA_DIR contains one subfolder per class, each full of .jpg images.
+Expected data layout: DATA_DIR contains one subfolder per class, each full of .jpg images.
 """
 import os
 import numpy as np
 from skimage import io, color, transform
 from skimage.feature import hog
 
-DATA_DIR = "normal_dataset"            # <-- parent folder that contains the 4 class folders
-OUT_FILE = "features.npz"
+DATA_DIR = "../normal_dataset"            # <-- parent folder that contains the 4 class folders
+OUT_FILE = "../output/features.npz"
 IMG_SIZE = (128, 128)
 HOG_PARAMS = dict(orientations=9, pixels_per_cell=(16, 16), cells_per_block=(2, 2))
 IMG_EXTS = (".jpg", ".jpeg", ".png")

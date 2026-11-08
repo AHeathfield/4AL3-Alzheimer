@@ -1,5 +1,5 @@
 """
-Step 2: run as many times as you like. Loads features.npz (made by preprocess.py)
+Loads features.npz (made by preprocess.py)
 and trains/evaluates the linear SVM (hinge loss, SGD).
 """
 import numpy as np
@@ -10,7 +10,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import SGDClassifier
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
-FEATURES_FILE = "features.npz"
+FEATURES_FILE = "../output/features.npz"
 SEED = 42
 
 data = np.load(FEATURES_FILE)
