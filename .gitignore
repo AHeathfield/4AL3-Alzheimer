@@ -5,3 +5,5 @@
 
 .texpadtmp/*
 main.pdf
+
+.venv/
