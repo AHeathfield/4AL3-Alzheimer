@@ -1,0 +1,104 @@
+\documentclass[11pt]{article}
+
+% Change "review" to "final" to generate the final (sometimes called camera-ready) version.
+% Change to "preprint" to generate a non-anonymous version with page numbers.
+\usepackage[]{acl}
+\usepackage{times}
+\usepackage{latexsym}
+
+% For proper rendering and hyphenation of words containing Latin characters (including in bib files)
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+\usepackage{inconsolata}
+\usepackage{graphicx}
+
+% Helper for highlighting things you still need to fill in (search for TODO before submitting)
+\newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
+
+\title{Group X Progress Report:\\Alzheimer's Disease Detection and Severity Prediction from MRI Scans}
+
+\author{Harrison Johns, Aidan Heathfield, Owen Johnson \\
+  \texttt{\{macid1,macid2,macid3\}@mcmaster.ca} }
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+Alzheimer's Disease (AD) is the most common neurodegenerative disease in the world, accounting for an estimated 60--70\% of dementia cases \citep{who_dementia}. Detecting AD early gives patients and clinicians a chance to act preventatively, which motivates automated tools that can flag AD from brain imaging.
+
+Our task is to train a model that takes an MRI brain scan as input and predicts both whether AD is present and how severe it is. Each scan is assigned exactly one of four classes: Non-Demented, Very Mild Demented, Mild Demented, or Moderate Demented (single-label, multi-class classification).
+
+The task is challenging for two reasons. First, it is an image recognition problem, an area where our team has limited experience. Second, the classes overlap: the subtle differences between very mild AD and normal aging, or between AD and other brain disorders, are hard to separate even for experts. This difficulty is also what makes the task informative, since studying which stages a model confuses shows where such models struggle and where they could be improved.
+
+\section{Related Work}
+
+Our approach is based on \citet{vengala2024}, who classified the same four AD stages using OASIS MRI scans \citep{marcus2007}. They extracted Histogram of Oriented Gradients (HOG) features from grayscale, scaled images and trained a linear support vector machine (SVM) with stochastic gradient descent (SGD) on 75\% of the data, reaching 74.21\% accuracy. This is the main baseline we aim to match or beat.
+
+At the other end of the spectrum, \citet{mmadumbu2025} evaluated structured-data and MRI-based models separately on the NACC and ADNI datasets. Their hybrid LSTM--feed-forward network achieved 99.82\% accuracy on structured (tabular) data, but this uses clinical records rather than raw images, so it is not directly comparable to our setting.
+
+Work on related imaging problems also informs our plans. \citet{bcmcnn2023} propose a 3D enhanced CNN (BCM-CNN) for brain tumor classification, with hyperparameters tuned by a grey wolf optimizer, and compare it against several classical techniques including SVMs. Their results suggest that deep models can outperform classical classifiers on brain MRI, which is a possible direction if time permits.
+
+Our data come from the Enhanced Alzheimer's Brain Scan Dataset \citep{masud2024}, a balanced four-class dataset derived from OASIS. \todo{Add any other related work you find, e.g.\ a paper using CNNs on this same Kaggle/Zenodo dataset. No one has done exactly this task with this dataset, so describe the closest work.}
+
+\section{Dataset}
+
+We use the \textit{Enhanced Alzheimer's Brain Scan Dataset: Normal and Synthesized} \citep{masud2024}, a public dataset compiled by Akmol Masud Ayon. Through correspondence with the author, we confirmed that the scans were sourced from the Open Access Series of Imaging Studies (OASIS) repository \citep{marcus2007}.
+
+The dataset has two parts: 8000 original MRI scans and 8000 corresponding ``enhanced'' images produced with a pseudo-RGB transformation. The author told us the enhancement did not work as hypothesized, so we use only the original scans. Each of the four classes (Non-Demented, Very Mild Demented, Mild Demented, Moderate Demented) has 2000 images, so the classes are perfectly balanced.
+
+\subsection{Preprocessing}
+
+\todo{Describe what you actually did: image size, conversion to grayscale, resizing, normalization/scaling, any cleaning. Mention the train/test split (e.g.\ 75\%/25\%, stratified, random seed).}
+
+\subsection{Data Exploration}
+
+\todo{Include one figure with sample scans from each class (e.g.\ with \texttt{\textbackslash includegraphics}) and mention any observations, such as visual similarity between neighbouring classes.}
+
+\section{Features}
+
+Rather than hand-selecting features, we use an image processing technique to extract them automatically, since MRI images are complex and AD overlaps heavily with other conditions in its effect on the brain. Following \citet{vengala2024}, we convert each scan to grayscale, resize it to a fixed size, and compute Histogram of Oriented Gradients (HOG) descriptors. HOG describes an image by the distribution of local edge directions, which captures structural information such as the shape of brain regions and ventricles. The resulting vectors are then scaled (standardized) before being passed to the classifier.
+
+\todo{State your HOG parameters (orientations, pixels per cell, cells per block), the resulting feature vector length, and the scaler used. If you tried anything else (PCA, raw pixels), mention it.}
+
+\section{Implementation}
+
+Our model is a linear SVM trained with stochastic gradient descent, implemented with scikit-learn's \texttt{SGDClassifier} using the hinge loss. A linear SVM finds the hyperplane that best separates classes in feature space; because we have four classes, the classifier uses a one-vs-rest scheme. SGD updates the weights using one sample (or a small batch) at a time, which is cheaper per step than full gradient descent and scales well to our feature dimensionality. We chose this model because it is covered in class, so the whole team understands its behaviour, and because it matches our baseline.
+
+We use Python with NumPy and Pandas for data handling, scikit-image or OpenCV for HOG extraction, scikit-learn for modelling, and Matplotlib and Seaborn for visualization.
+
+\todo{Give the hyperparameters you used (learning rate, regularization strength $\alpha$, number of epochs, tolerance) and how you chose them (e.g.\ grid search with cross-validation). Mention training time and any difficulties.}
+
+\section{Results and Evaluation}
+
+We evaluate with accuracy on the held-out test set, since the classes are balanced, and our target is accuracy near or above the 74.21\% reported by \citet{vengala2024}. Beyond overall accuracy, we use a confusion matrix and per-class precision, recall and F1 to see which stages are confused with one another, which is central to our motivation.
+
+\todo{Report your results in a table (see below for a skeleton), compare to the 74.21\% baseline, and include the confusion matrix figure. Discuss which classes are hardest.}
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{lc}
+    \hline
+    \textbf{Model} & \textbf{Test accuracy} \\
+    \hline
+    \citet{vengala2024} (SVM + SGD) & 74.21\% \\
+    Ours (HOG + linear SVM, SGD) & \todo{xx.xx}\% \\
+    \hline
+  \end{tabular}
+  \caption{\label{tab:results} Test accuracy compared with our baseline.}
+\end{table}
+
+\section{Feedback and Plans}
+
+Our TA (Zezo) gave us three main pieces of advice: (1) pick a model early rather than spending time comparing many options; (2) use a model from the course so that the team can understand and interpret its output; and (3) start early, since training can take many hours and much processing power. We followed this by committing to a linear SVM with SGD from the start.
+
+\todo{Reflect on what has and has not worked so far, any feedback received on this progress report or your draft, and your plan for the rest of the project. Ideas: tune hyperparameters, try a kernel SVM or a small CNN to compare against the baseline, analyze errors on the Very Mild vs.\ Non-Demented classes, and check that images from the same subject do not appear in both the train and test sets (this could inflate accuracy).}
+
+\section*{Team Contributions}
+
+\todo{Describe what each member did, e.g.\ Harrison: ...; Aidan: ...; Owen: ...}
+
+\bibliography{custom}
+
+\end{document}
