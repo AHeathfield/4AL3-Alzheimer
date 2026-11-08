@@ -7,3 +7,6 @@
 main.pdf
 
 .venv/
+venv/
+
+output/
