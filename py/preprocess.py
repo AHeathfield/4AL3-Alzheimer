@@ -12,7 +12,7 @@ from skimage.feature import hog
 DATA_DIR = "../normal_dataset"            # <-- parent folder that contains the 4 class folders
 OUT_FILE = "../output/features.npz"
 IMG_SIZE = (128, 128)
-HOG_PARAMS = dict(orientations=9, pixels_per_cell=(16, 16), cells_per_block=(2, 2))
+HOG_PARAMS = dict(orientations=9, pixels_per_cell=(8, 8), cells_per_block=(2, 2))
 IMG_EXTS = (".jpg", ".jpeg", ".png")
 
 

@@ -10,5 +10,4 @@ main.pdf
 venv/
 __pycache__/
 
-output/
-output/*
+*.npz
