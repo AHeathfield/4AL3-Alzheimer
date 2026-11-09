@@ -14,10 +14,10 @@ FEATURES_FILE = "../output/features.npz"
 OUTPUT_DIR = "../output"
 
 SEED = 42   # hard-coded seed for reproducible result
-TEST_SPLIT = 0.25   # 25% test, 75% train
-ALPHA = 1e-4   # regularization strength for SGDClassifier
+TEST_SPLIT = 0.20   # 20% test, 80% train
+ALPHA = 0.1   # regularization strength for SGDClassifier
 MAX_ITER = 1000   # max num iterations for SGDClassifier
-TOL = 1e-3   # stopping criterion for SGDClassifier
+TOL = 0.001   # stopping criterion for SGDClassifier
 
 data = np.load(FEATURES_FILE)
 X, y = data["X"], data["y"]

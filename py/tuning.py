@@ -19,6 +19,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "..", "normal_dataset")
 OUTPUT_DIR = os.path.join(BASE_DIR, "..", "output")
 RESULTS_FILE = os.path.join(OUTPUT_DIR, "tuning_results.csv")
+RECOVERY_FILE = os.path.join(OUTPUT_DIR, "tuning_results_recovery.csv")
 IMG_EXTS = (".jpg", ".jpeg", ".png")
 
 # Add values to any list to test them. 
@@ -73,7 +74,6 @@ def main():
     # repeat the expensive image pass for models sharing those settings.
     feature_cache = {}
     results = existing_results
-    X, y = preprocess(class_names)  # Preprocess once for the default settings. You can modify this to cache different settings if needed.
     for run_number, (model_id, parameters) in enumerate(pending_combinations, start=1):
         key = combination_key(parameters)
         preprocessing_key = (
@@ -82,7 +82,6 @@ def main():
             parameters["pixels_per_cell"],
             parameters["cells_per_block"],
         )
-        """
         if preprocessing_key not in feature_cache:
             feature_cache[preprocessing_key] = preprocess(
                 class_names,
@@ -93,9 +92,8 @@ def main():
                     "cells_per_block": parameters["cells_per_block"],
                 },
             )
-
         X, y = feature_cache[preprocessing_key]
-        """
+        X, y = feature_cache[preprocessing_key]
         train_accuracy, test_accuracy = train(
             X,
             y,
@@ -114,6 +112,7 @@ def main():
             "test_accuracy": test_accuracy,
         }
         results.append(result)
+        save_results(results)
         print(
             f"[{run_number}/{len(pending_combinations)}] "
             f"test_accuracy={test_accuracy:.4f} parameters={parameters}"
@@ -124,39 +123,7 @@ def main():
     print(f"\nTuning completed in {time_elapsed}.")
 
     # get accuracy statistics for each unique combination of parameters (ignoring seed)
-    accuracy_groups = defaultdict(list)
-    for result in results:
-        group_key = combination_key(
-            {name: result[name] for name in parameter_names if name != "seed"}
-        )
-        accuracy_groups[group_key].append(float(result["test_accuracy"]))
-
-    # add the accuracy statistics to each result
-    for result in results:
-        group_key = combination_key(
-            {name: result[name] for name in parameter_names if name != "seed"}
-        )
-        accuracies = accuracy_groups[group_key]
-        result["test_accuracy_mean"] = np.mean(accuracies)
-        result["test_accuracy_std"] = np.std(accuracies)
-        result["runs_in_group"] = len(accuracies)
-
-    results.sort(key=lambda result: result["test_accuracy_mean"], reverse=True)
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
-    with open(RESULTS_FILE, "w", newline="", encoding="utf-8") as results_file:
-        fieldnames = [
-            "model_id",
-            "combination_key",
-            *parameter_names,
-            "train_accuracy",
-            "test_accuracy",
-            "test_accuracy_mean",
-            "test_accuracy_std",
-            "runs_in_group",
-        ]
-        writer = csv.DictWriter(results_file, fieldnames=fieldnames)
-        writer.writeheader()
-        writer.writerows(results)
+    save_results(results)
 
     print(f"\nSaved sorted results to {RESULTS_FILE}")
     print("\nBest combinations:")
@@ -172,6 +139,61 @@ def main():
 def combination_key(parameters):
     """Create a stable key that can be used to resume a tuning run."""
     return repr(sorted(parameters.items()))
+
+
+def save_results(results):
+    """Save results and checkpoint after every completed model."""
+    if not results:
+        return
+
+    parameter_names = list(PARAM_GRID)
+    accuracy_groups = defaultdict(list)
+    for result in results:
+        group_key = combination_key(
+            {name: result[name] for name in parameter_names if name != "seed"}
+        )
+        accuracy_groups[group_key].append(float(result["test_accuracy"]))
+
+    for result in results:
+        group_key = combination_key(
+            {name: result[name] for name in parameter_names if name != "seed"}
+        )
+        accuracies = accuracy_groups[group_key]
+        result["test_accuracy_mean"] = np.mean(accuracies)
+        result["test_accuracy_std"] = np.std(accuracies)
+        result["runs_in_group"] = len(accuracies)
+
+    results.sort(key=lambda result: result["test_accuracy_mean"], reverse=True)
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    fieldnames = [
+        "model_id",
+        "combination_key",
+        *parameter_names,
+        "train_accuracy",
+        "test_accuracy",
+        "test_accuracy_mean",
+        "test_accuracy_std",
+        "runs_in_group",
+    ]
+    try:
+        write_results_file(RESULTS_FILE, results, fieldnames)
+        output_file = RESULTS_FILE
+    except PermissionError:
+        write_results_file(RECOVERY_FILE, results, fieldnames)
+        output_file = RECOVERY_FILE
+        print(
+            f"Could not write {RESULTS_FILE}. "
+            f"Saved results to {RECOVERY_FILE} instead. "
+            "Close the CSV in Excel and copy the recovery file over it later."
+        )
+    print(f"\nSaved checkpoint to {output_file}")
+
+
+def write_results_file(path, results, fieldnames):
+    with open(path, "w", newline="", encoding="utf-8") as results_file:
+        writer = csv.DictWriter(results_file, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(results)
 
 
 def load_results():
