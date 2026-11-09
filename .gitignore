@@ -8,6 +8,7 @@ main.pdf
 
 .venv/
 venv/
+__pycache__/
 
 output/
 output/*
