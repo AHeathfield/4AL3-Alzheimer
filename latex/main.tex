@@ -16,10 +16,10 @@
 % Helper for highlighting things you still need to fill in (search for TODO before submitting)
 \newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
 
-\title{Group X Progress Report:\\Alzheimer's Disease Detection and Severity Prediction from MRI Scans}
+\title{Group 100 Progress Report:\\Alzheimer's Disease Detection and Severity Prediction from MRI Scans}
 
 \author{Harrison Johns, Aidan Heathfield, Owen Johnson \\
-  \texttt{\{macid1,macid2,macid3\}@mcmaster.ca} }
+  \texttt{\{johnsh32,macid2,macid3\}@mcmaster.ca} }
 
 \begin{document}
 \maketitle
@@ -46,13 +46,20 @@ Our data come from the Enhanced Alzheimer's Brain Scan Dataset \citep{masud2024}
 
 We use the \textit{Enhanced Alzheimer's Brain Scan Dataset: Normal and Synthesized} \citep{masud2024}, a public dataset compiled by Akmol Masud Ayon. Through correspondence with the author, we confirmed that the scans were sourced from the Open Access Series of Imaging Studies (OASIS) repository \citep{marcus2007}.
 
-The dataset has two parts: 8000 original MRI scans and 8000 corresponding ``enhanced'' images produced with a pseudo-RGB transformation. The author told us the enhancement did not work as hypothesized, so we use only the original scans. Each of the four classes (Non-Demented, Very Mild Demented, Mild Demented, Moderate Demented) has 2000 images, so the classes are perfectly balanced.
+The dataset has two parts: 8000 original MRI scans (the 'normal' dataset) and 8000 corresponding "enhanced'' images produced with a pseudo-RGB transformation (the 'synthesized' dataset). The author told us their enhancements did not prove as effective as hypothesizied, so we use only the original, unmodified scans. Each of the four classes (Non-Demented, Very Mild Demented, Mild Demented, Moderate Demented) has 2000 images, so the classes are perfectly balanced in size.
 
 \subsection{Preprocessing}
 
-\todo{Describe what you actually did: image size, conversion to grayscale, resizing, normalization/scaling, any cleaning. Mention the train/test split (e.g.\ 75\%/25\%, stratified, random seed).}
+The layout of the datset already has the images sorted by class, so each class has a subdirectly filled with all its images. This makes it easy to assign labels to the dataset in the preprocessing stage (based on their directory). In the \textit{preprocess.py} script, we assign labels to all the images, then convert them to grayscale, resize them to 128x128, extract Histrogram of Oriented Gradients (HOG) features, and save X, y, and classnames to a .npz (zipped NumPy) file. The feature matrix X is created from the HOG features of each image (X.shape=(8000,1764)), and the label vector y is has the corresponding label of each image, being 0, 1, 2, or 3, the index corresponding the the classnames array (thus y.shape=(8000)). To start, we decided on a 75\%/25\% testing/training split, with a hard-coded seed=42 for reproducibility of results.
+
+We decided to grayscale the images in order to optimize compute. Since we're dealing with MRI images, which show structural features and anomalies, colour values do not add significant value. Thus, by ignoring the colour channels (converting to grayscale), we handle smaller image files and less complexity, improving computation time. We decided to resize the images to 128x128 in order to have a standardized fixed size between all the data, which is important for feature analysis. The original data varies in exact dimensions, but lives around the 200x200 range, so little data is lost in resizing to 128x128.
+
+Since MRI images are complex and focus show the structural features of the brain, we compute HOG descriptors as our features. HOG describes an image by analyzing the distribution of edge directions, or gradient orientations, in localized portions of the image. In this, HOG captures structural information, such as shapes, which makes it perfect for MRI images, and specifically describing differences in structure in regions of the brain.
 
 \subsection{Data Exploration}
+
+
+
 
 \todo{Include one figure with sample scans from each class (e.g.\ with \texttt{\textbackslash includegraphics}) and mention any observations, such as visual similarity between neighbouring classes.}
 

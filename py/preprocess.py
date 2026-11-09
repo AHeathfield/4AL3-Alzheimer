@@ -51,6 +51,9 @@ def main():
         OUT_FILE, X=X, y=y, class_names=np.array(class_names), paths=np.array(paths)
     )
     print(f"Saved {OUT_FILE}: X={X.shape}, y={y.shape}")
+    
+    print(f"Example HOG feature vector (length {X.shape[1]}):\n", X[0])
+    print(f"Example label: {y[0]} ({class_names[y[0]]})")
 
 
 if __name__ == "__main__":
