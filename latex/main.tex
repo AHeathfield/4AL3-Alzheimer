@@ -50,7 +50,7 @@ The dataset has two parts: 8000 original MRI scans (the 'normal' dataset) and 80
 
 \subsection{Preprocessing}
 
-The layout of the datset already has the images sorted by class, so each class has a subdirectly filled with all its images. This makes it easy to assign labels to the dataset in the preprocessing stage (based on their directory). In the \textit{preprocess.py} script, we assign labels to all the images, then convert them to grayscale, resize them to 128x128, extract Histrogram of Oriented Gradients (HOG) features, and save X, y, and classnames to a .npz (zipped NumPy) file. The feature matrix X is created from the HOG features of each image (X.shape=(8000,1764)), and the label vector y is has the corresponding label of each image, being 0, 1, 2, or 3, the index corresponding the the classnames array (thus y.shape=(8000)). To start, we decided on a 80\%/20\% testing/training split, with a hard-coded seed=42 for reproducibility of results.
+The layout of the datset already has the images sorted by class, so each class has a subdirectly filled with all its images. This makes it easy to assign labels to the dataset in the preprocessing stage (based on their directory). In the \textit{preprocess.py} script, we assign labels to all the images, then convert them to grayscale, resize them to 128x128, extract Histrogram of Oriented Gradients (HOG) features, and save X, y, and classnames to a .npz (zipped NumPy) file. The feature matrix X is created from the HOG features of each image (X.shape=(8000,1764)), and the label vector y is has the corresponding label of each image, being 0, 1, 2, or 3, the index corresponding the the classnames array (thus y.shape=(8000)). To start, we decided on a 80\%/20\% training/testing split, with a hard-coded seed=42 for reproducibility of results.
 
 We decided to grayscale the images in order to optimize compute. Since we're dealing with MRI images, which show structural features and anomalies, colour values do not add significant value. Thus, by ignoring the colour channels (converting to grayscale), we handle smaller image files and less complexity, improving computation time. We decided to resize the images to 128x128 in order to have a standardized fixed size between all the data, which is important for feature analysis. The original data varies in exact dimensions, but lives around the 200x200 range, so little data is lost in resizing to 128x128. Through hyperparameter and preprocessing parameter tuning, we found that 128x128 provided better results on average than (96x96).
 
@@ -58,8 +58,16 @@ Since MRI images are complex and focus show the structural features of the brain
 
 \subsection{Data Exploration}
 
+To understand how visually separable the four classes are, we can inspect a sample of scans from each class (Figure~\ref{fig:samples}). The \textit{Moderate Demented} class is the most visually distinct, as it shows the furthest progression of AD, with visibly reduced brain area/volume. As expected, our current model performs best on this class, consistent with it being the easiest class to separate.
 
+At the opposite end, the \textit{Non-Demented} and \textit{Very Mild Demented} classes are very similar, due to early AD progression being hard to distinguish from other neurodegenerative diseasese and the normal effects of aging. Thus, these two classes are the most confused with each other in our confusion matrix (Section~\ref{sec:results}).
 
+\begin{figure}[t]
+	\centering
+	\includegraphics[width=\linewidth]{figures/meimei.jpg}
+	\caption{MRI scans from each class (Non-Demented, Very Mild Demented, Mild Demented, Moderate Demented). Note the degredation of the brain as severity increases.}
+	\label{fig:samples}
+\end{figure}
 
 \todo{Include one figure with sample scans from each class (e.g.\ with \texttt{\textbackslash includegraphics}) and mention any observations, such as visual similarity between neighbouring classes.}
 
@@ -78,6 +86,7 @@ We use Python with NumPy and Pandas for data handling, scikit-image or OpenCV fo
 \todo{Give the hyperparameters you used (learning rate, regularization strength $\alpha$, number of epochs, tolerance) and how you chose them (e.g.\ grid search with cross-validation). Mention training time and any difficulties.}
 
 \section{Results and Evaluation}
+\label{sec:results}
 
 We evaluate with accuracy on the held-out test set, since the classes are balanced, and our target is accuracy near or above the 74.21\% reported by \citet{vengala2024}. Beyond overall accuracy, we use a confusion matrix and per-class precision, recall and F1 to see which stages are confused with one another, which is central to our motivation.
 
