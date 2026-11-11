@@ -26,7 +26,7 @@
 
 \section{Introduction}
 
-Alzheimer's Disease (AD) is the most common neurodegenerative disease in the world, accounting for an estimated 60--70\% of dementia cases \citep{who_dementia}. Detecting AD early gives patients and clinicians a chance to act preventatively, which motivates automated tools that can flag AD from brain imaging.
+Alzheimer's Disease (AD) is the most common neurodegenerative disease in the world, accounting for an estimated 60--70\% of dementia cases \citep{who_dementia}. Detecting AD early can allow people to take action to prevent it. This is a big motivation to create a model that can flag AD from brain imaging.
 
 Our task is to train a model that takes an MRI brain scan as input and predicts both whether AD is present and how severe it is. Each scan is assigned exactly one of four classes: Non-Demented, Very Mild Demented, Mild Demented, or Moderate Demented (single-label, multi-class classification).
 
@@ -34,13 +34,13 @@ The task is challenging for two reasons. First, it is an image recognition probl
 
 \section{Related Work}
 
-Our approach is based on \citet{vengala2024}, who classified the same four AD stages using OASIS MRI scans \citep{marcus2007}. They extracted Histogram of Oriented Gradients (HOG) features from grayscale, scaled images and trained a linear support vector machine (SVM) with stochastic gradient descent (SGD) on 75\% of the data, reaching 74.21\% accuracy. This is the main baseline we aim to match or beat.
+Our approach is based on \citet{vengala2024}, who classified the same four AD stages using OASIS MRI scans \citep{marcus2007}. They extracted Histogram of Oriented Gradients (HOG) features from grayscale, scaled images and trained a linear support vector machine (SVM) with stochastic gradient descent (SGD) on 75\% of the data, reaching 74.21\% accuracy. This is our teams reference point to match as close as possible or to beat.
 
-At the other end of the spectrum, \citet{mmadumbu2025} evaluated structured-data and MRI-based models separately on the NACC and ADNI datasets. Their hybrid LSTM--feed-forward network achieved 99.82\% accuracy on structured (tabular) data, but this uses clinical records rather than raw images, so it is not directly comparable to our setting.
+Another method from \citet{mmadumbu2025} evaluated structured-data and MRI-based models separately on the NACC and ADNI datasets. Their hybrid LSTM--feed-forward network achieved 99.82\% accuracy on structured (tabular) data, but this uses clinical records rather than raw images, so it is not comparable to our model.
 
-Work on related imaging problems also informs our plans. \citet{bcmcnn2023} propose a 3D enhanced CNN (BCM-CNN) for brain tumor classification, with hyperparameters tuned by a grey wolf optimizer, and compare it against several classical techniques including SVMs. Their results suggest that deep models can outperform classical classifiers on brain MRI, which is a possible direction if time permits.
+Other brain scan related problems may also prove useful. \citet{bcmcnn2023} uses a 3D enhanced CNN (BCM-CNN) for brain tumor classification, with hyperparameters tuned by a grey wolf optimizer, and compare it against several classical techniques including SVMs. Their results suggest that deep models can outperform classical classifiers on brain MRI, which is a possible direction if time permits.
 
-Our data come from the Enhanced Alzheimer's Brain Scan Dataset \citep{masud2024}, a balanced four-class dataset derived from OASIS. \todo{Add any other related work you find, e.g.\ a paper using CNNs on this same Kaggle/Zenodo dataset. No one has done exactly this task with this dataset, so describe the closest work.}
+Our data come from the Enhanced Alzheimer's Brain Scan Dataset \citep{masud2024}, a balanced four-class dataset derived from OASIS.
 
 \section{Dataset}
 
