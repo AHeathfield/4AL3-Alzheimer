@@ -85,14 +85,18 @@ We use Python with NumPy and Pandas for data handling, scikit-image or OpenCV fo
 
 Three main hyperparameters were tuned for this model. regularization strength ($\alpha$), epoch number (\texttt{max\_iter}), and stopping tolerance (\texttt{tol}). \texttt{img\_size} and \texttt{pixels\_per\_cell} were also tuned. A grid search was used to determine the best combination from options of $\alpha$ = \{0.001, 0.01, 0.1\}, \texttt{max\_iter} = \{1000, 3000\}, \texttt{tol} = \{0.01, 0.001, 0.0001\}, \texttt{img\_size} = \{(96, 96), (128, 128)\} and \texttt{pixels\_per\_cell} = \{(8, 8), (16, 16)\}. Our final model uses $\alpha$ = 0.1, \texttt{max\_iter} = 1000, \texttt{tol} = 0.0001, \texttt{img\_size} = (128, 128), and \texttt{pixels\_per\_cell} = (8, 8), since this combination received the highest mean test accuracy (\~70.77\%) across the 3 seeds tested (42, 100, 999).
 
-Some difficulties the team ran into were implementing and tuning HOG parameters and discerning the difference between some neigbouring labels. HOG extraction takes a while on the dataset and this will be refined later in development. As per the confusion matrix, the model was good at identifying moderate demented cases, but was less accurate at discerning between non demented and very mild demented, or between very mild and mild. This will be adressed when further tuning takes place.
+The main difficulty the team ran into was implementing and tuning HOG parameters. HOG extraction takes a while on the dataset and this will be refined later in development when further tuning has taken place. 
 
 \section{Results and Evaluation}
 \label{sec:results}
 
 We evaluate with accuracy on the held-out test set, since the classes are balanced, and our target is accuracy near or above the 74.21\% reported by \citet{vengala2024}. Beyond overall accuracy, we use a confusion matrix and per-class precision, recall and F1 to see which stages are confused with one another, which is central to our motivation.
+\\
+\\
+\\
+As per the confusion matrix, the model was good at identifying moderate demented cases, but was less accurate at discerning between non demented and very mild demented, or between very mild and mild. This will be adressed when further tuning takes place.
 
-\todo{Report your results in a table (see below for a skeleton), compare to the 74.21\% baseline, and include the confusion matrix figure. Discuss which classes are hardest.}
+
 
 \begin{table}[h]
   \centering
@@ -101,11 +105,18 @@ We evaluate with accuracy on the held-out test set, since the classes are balanc
     \textbf{Model} & \textbf{Test accuracy} \\
     \hline
     \citet{vengala2024} (SVM + SGD) & 74.21\% \\
-    Ours (HOG + linear SVM, SGD) & \todo{xx.xx}\% \\
+    Team (Prelim. HOG + linear SVM, SGD) & 70.77\% \\
     \hline
   \end{tabular}
   \caption{\label{tab:results} Test accuracy compared with our baseline.}
 \end{table}
+
+\begin{figure}[t]
+	\centering
+	\includegraphics[width=\linewidth]{figures/confusion\_matrix.png}
+	\caption{Confusion matrix for team model results.}
+	\label{fig:samples}
+\end{figure}
 
 \section{Feedback and Plans}
 
