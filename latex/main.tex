@@ -79,11 +79,13 @@ Rather than hand-selecting features, we use an image processing technique to ext
 
 \section{Implementation}
 
-Our model is a linear SVM trained with stochastic gradient descent, implemented with scikit-learn's \texttt{SGDClassifier} using the hinge loss. A linear SVM finds the hyperplane that best separates classes in feature space; because we have four classes, the classifier uses a one-vs-rest scheme. SGD updates the weights using one sample (or a small batch) at a time, which is cheaper per step than full gradient descent and scales well to our feature dimensionality. We chose this model because it is covered in class, so the whole team understands its behaviour, and because it matches our baseline.
+Our model is a linear SVM trained with stochastic gradient descent, implemented using hinge loss from scikit-learn's \texttt{SGDClassifier}. A linear SVM finds the hyperplane that best separates classes in feature space; because we have four classes, the classifier uses a one-vs-rest scheme. SGD updates the weights using one sample at a time, which is cheaper per step than full gradient descent and scales well to our feature dimensionality. This model was chosen as it was easy for the team to understand, as it was discussed in lecture.
 
 We use Python with NumPy and Pandas for data handling, scikit-image or OpenCV for HOG extraction, scikit-learn for modelling, and Matplotlib and Seaborn for visualization.
 
-\todo{Give the hyperparameters you used (learning rate, regularization strength $\alpha$, number of epochs, tolerance) and how you chose them (e.g.\ grid search with cross-validation). Mention training time and any difficulties.}
+Three main hyperparameters were tuned for this model. regularization strength ($\alpha$), epoch number (\texttt{max\_iter}), and stopping tolerance (\texttt{tol}). \texttt{img\_size} and \texttt{pixels\_per\_cell} were also tuned. A grid search was used to determine the best combination from options of $\alpha$ = \{0.001, 0.01, 0.1\}, \texttt{max\_iter} = \{1000, 3000\}, \texttt{tol} = \{0.01, 0.001, 0.0001\}, \texttt{img\_size} = \{(96, 96), (128, 128)\} and \texttt{pixels\_per\_cell} = \{(8, 8), (16, 16)\}. Our final model uses $\alpha$ = 0.1, \texttt{max\_iter} = 1000, \texttt{tol} = 0.0001, \texttt{img\_size} = (128, 128), and \texttt{pixels\_per\_cell} = (8, 8), since this combination received the highest mean test accuracy (\~70.77\%) across the 3 seeds tested (42, 100, 999).
+
+Some difficulties the team ran into were implementing and tuning HOG parameters and discerning the difference between some neigbouring labels. HOG extraction takes a while on the dataset and this will be refined later in development. As per the confusion matrix, the model was good at identifying moderate demented cases, but was less accurate at discerning between non demented and very mild demented, or between very mild and mild. This will be adressed when further tuning takes place.
 
 \section{Results and Evaluation}
 \label{sec:results}
@@ -107,9 +109,15 @@ We evaluate with accuracy on the held-out test set, since the classes are balanc
 
 \section{Feedback and Plans}
 
-Our TA (Zezo) gave us three main pieces of advice: (1) pick a model early rather than spending time comparing many options; (2) use a model from the course so that the team can understand and interpret its output; and (3) start early, since training can take many hours and much processing power. We followed this by committing to a linear SVM with SGD from the start.
+Our TA (Shreya) gave us three main pieces of feedback:
 
-\todo{Reflect on what has and has not worked so far, any feedback received on this progress report or your draft, and your plan for the rest of the project. Ideas: tune hyperparameters, try a kernel SVM or a small CNN to compare against the baseline, analyze errors on the Very Mild vs.\ Non-Demented classes, and check that images from the same subject do not appear in both the train and test sets (this could inflate accuracy).}
+\begin{itemize}
+	\item Continue to tune hyperparameters to refine model accuracy, trying bigger ranges for some hyperparamters.
+	\item Keep an eye on the fact that training accuracy is higher than test accuracy. Figure out how that can affect the model.
+	\item Look into other model options. Mentioned neural network as example and TA agreed.
+\end{itemize}
+
+Feedback received on the proposal (from Zezo) was followed by picking a model early, and using a model covered in the course. Also thanks to his advice, the team started early to avoid long waits for training. Training was often done overnight to reduce the effect of the waiting. 
 
 \section*{Team Contributions}
 
