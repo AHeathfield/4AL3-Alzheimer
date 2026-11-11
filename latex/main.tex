@@ -85,7 +85,7 @@ We use Python with NumPy and Pandas for data handling, scikit-image or OpenCV fo
 
 Three main hyperparameters were tuned for this model. regularization strength ($\alpha$), epoch number (\texttt{max\_iter}), and stopping tolerance (\texttt{tol}). \texttt{img\_size} and \texttt{pixels\_per\_cell} were also tuned. A grid search was used to determine the best combination from options of $\alpha$ = \{0.001, 0.01, 0.1\}, \texttt{max\_iter} = \{1000, 3000\}, \texttt{tol} = \{0.01, 0.001, 0.0001\}, \texttt{img\_size} = \{(96, 96), (128, 128)\} and \texttt{pixels\_per\_cell} = \{(8, 8), (16, 16)\}. Our final model uses $\alpha$ = 0.1, \texttt{max\_iter} = 1000, \texttt{tol} = 0.0001, \texttt{img\_size} = (128, 128), and \texttt{pixels\_per\_cell} = (8, 8), since this combination received the highest mean test accuracy (\~70.77\%) across the 3 seeds tested (42, 100, 999).
 
-The main difficulty the team ran into was implementing and tuning HOG parameters. HOG extraction takes a while on the dataset and this will be refined later in development when further tuning has taken place. 
+The main difficulty the team ran into was implementing and tuning HOG parameters. HOG extraction takes a while on the dataset and these parameters will be further refined later in development when more tuning has taken place. 
 
 \section{Results and Evaluation}
 \label{sec:results}
@@ -132,7 +132,12 @@ Feedback received on the proposal (from Zezo) was followed by picking a model ea
 
 \section*{Team Contributions}
 
-\todo{Describe what each member did, e.g.\ Harrison: ...; Aidan: ...; Owen: ...}
+\textbf{Owen}
+\begin{itemize}
+	\item Wrote Implementation section, Results and Evaluation section, and Feedback and Plans section
+	\item Aided in LaTeX configuration and document initialization
+	\item Contributed to and reviewed preliminary model 
+\end{itemize}
 
 \bibliography{custom}
 
