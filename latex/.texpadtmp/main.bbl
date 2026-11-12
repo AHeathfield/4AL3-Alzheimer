@@ -1,4 +1,35 @@
-\begin{thebibliography}{0}
+\begin{thebibliography}{6}
 \providecommand{\natexlab}[1]{#1}
+
+\bibitem[{Marcus et~al.(2007)Marcus, Wang, Parker, Csernansky, Morris, and Buckner}]{marcus2007}
+Daniel~S. Marcus, Tracy~H. Wang, Jamie Parker, John~G. Csernansky, John~C. Morris, and Randy~L. Buckner. 2007.
+\newblock \href {https://doi.org/10.1162/jocn.2007.19.9.1498} {Open access series of imaging studies ({OASIS}): Cross-sectional {MRI} data in young, middle aged, nondemented, and demented older adults}.
+\newblock \emph{Journal of Cognitive Neuroscience}, 19(9):1498--1507.
+
+\bibitem[{Masud(2024)}]{masud2024}
+Akmol Masud. 2024.
+\newblock \href {https://doi.org/10.5281/zenodo.14238547} {Enhanced {Alzheimer's} brain scan dataset: Normal and synthesized}.
+\newblock Zenodo.
+
+\bibitem[{Mmadumbu et~al.(2025)Mmadumbu, Saeed, Ghaleb, and Qasem}]{mmadumbu2025}
+A.~C. Mmadumbu, F.~Saeed, F.~Ghaleb, and S.~N. Qasem. 2025.
+\newblock \href {https://pmc.ncbi.nlm.nih.gov/articles/PMC12069014/} {Early detection of {Alzheimer's} disease using deep learning methods}.
+\newblock \emph{Alzheimer's \& Dementia}, 21(5).
+
+\bibitem[{Vengala(2024)}]{vengala2024}
+Anvita Vengala. 2024.
+\newblock \href {https://www.ijfmr.com/papers/2024/6/30251.pdf} {Classification of mild, very mild, moderate, and non-demented {Alzheimer's} disease {MRI} scans with {SVM}}.
+\newblock \emph{International Journal For Multidisciplinary Research (IJFMR)}, 6(6).
+
+\bibitem[{{World Health Organization}(2025)}]{who_dementia}
+{World Health Organization}. 2025.
+\newblock \href {https://www.who.int/news-room/fact-sheets/detail/dementia} {Dementia}.
+\newblock Fact sheet.
+\newblock Accessed Oct. 9, 2026.
+
+\bibitem[{ZainEldin et~al.(2023)ZainEldin, Gamel, El-Kenawy, Alharbi, Khafaga, Ibrahim, and Talaat}]{bcmcnn2023}
+Hanaa ZainEldin, Samah~A. Gamel, El-Sayed~M. El-Kenawy, Amal~H. Alharbi, Doaa~Sami Khafaga, Abdelhameed Ibrahim, and Fatma~M. Talaat. 2023.
+\newblock \href {https://doi.org/10.3390/bioengineering10010018} {Brain tumor detection and classification using deep learning and sine-cosine fitness grey wolf optimization}.
+\newblock \emph{Bioengineering}, 10(1):18.
 
 \end{thebibliography}
